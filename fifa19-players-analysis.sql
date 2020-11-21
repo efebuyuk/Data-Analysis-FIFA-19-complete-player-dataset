@@ -48,7 +48,7 @@ WHERE players.Position = 'GK'
     AND players.Value LIKE '_1_M'; -- GK's value should be around 10M
 
 /*
-What are the most important attributes for a Defense Player?
+What are the most important attributes for a Defence Player?
 1. Heights: ex - 5'7
 2. Jumping
 3. Agility
@@ -57,9 +57,9 @@ What are the most important attributes for a Defense Player?
 6. Ball Control
 */
 
--- Search for Defense Players by comparing other Defense Players' AVG values
-WITH all_defense AS ( -- Create a temporary table for all Defense Players
-    SELECT 'All Players', 'ALL Defense', 'Contract Valid Until',
+-- Search for Defence Players by comparing other Defence Players' AVG values
+WITH all_defence AS ( -- Create a temporary table for all Defence Players
+    SELECT 'All Players', 'ALL Defence', 'Contract Valid Until',
         ROUND(AVG(d.Height), 1) AS AVG_Height, ROUND(AVG(d.Jumping), 1) AS AVG_Jumping,
         ROUND(AVG(d.Agility), 1) AS AVG_Agility, ROUND(AVG(d.LongPassing), 1) AS AVG_LPassing,
         ROUND(AVG(d.ShortPassing), 1) AS AVG_SPassing, ROUND(AVG(d.BallControl), 1) AS AVG_BControl
@@ -67,17 +67,17 @@ WITH all_defense AS ( -- Create a temporary table for all Defense Players
     WHERE (d.Position = 'CB' OR d.Position = 'RB' OR d.Position = 'LB')
 )
 
--- Search for Defense Players
+-- Search for Defence Players
 SELECT  players.name, players.Position, players."Contract Valid Until", players.Value,
         Height, Jumping, Agility, LongPassing, ShortPassing, BallControl
 FROM fifa19_dataset AS players
 WHERE (players.Position = 'CB' OR players.Position = 'RB' OR players.Position = 'LB')
-    AND players.Height > (SELECT AVG_Height FROM all_defense)
-    AND players.Jumping > (SELECT AVG_Jumping FROM all_defense)
-    AND players.Agility > (SELECT AVG_Agility FROM all_defense)
-    AND players.LongPassing > (SELECT AVG_LPassing FROM all_defense)
-    AND players.ShortPassing > (SELECT AVG_SPassing FROM all_defense)
-    AND players.BallControl > (SELECT AVG_BControl FROM all_defense)
+    AND players.Height > (SELECT AVG_Height FROM all_defence)
+    AND players.Jumping > (SELECT AVG_Jumping FROM all_defence)
+    AND players.Agility > (SELECT AVG_Agility FROM all_defence)
+    AND players.LongPassing > (SELECT AVG_LPassing FROM all_defence)
+    AND players.ShortPassing > (SELECT AVG_SPassing FROM all_defence)
+    AND players.BallControl > (SELECT AVG_BControl FROM all_defence)
     AND players."Contract Valid Until" < 2021
     AND players.Value LIKE '_1_M' -- Defense Players' value should be around 10M
 ;
@@ -100,8 +100,8 @@ What are the most important attributes for a Attacker Player?
 */
 
 
-WITH -- Prepare temporary tables for defense, midfielder and striker(attacker) players
-    all_defenses AS ( -- Create a temporary table for all Defense Players
+WITH -- Prepare temporary tables for defence, midfielder and striker(attacker) players
+    all_defences AS ( -- Create a temporary table for all Defence Players
     SELECT  d.id, d.name, d.Position, d."Contract Valid Until", d.Value, d.ShortPassing, d.BallControl, d.LongShots -- common fields
             ,d.Height, d.Jumping, d.Agility, d.LongPassing -- extra fields for defenders
             ,d.Stamina, d."Work Rate" -- extra fields for midfielders
@@ -128,7 +128,7 @@ WITH -- Prepare temporary tables for defense, midfielder and striker(attacker) p
 
 -- Search for Defense, Midfielder and Striker(Attacker) Players at once
 SELECT *
-FROM all_defenses AS d
+FROM all_defences AS d
 WHERE d.Height > 5 AND d.Jumping > 65 AND d.Agility > 65
     AND d.LongPassing > 65 AND d.ShortPassing > 65 AND d.BallControl > 65
     AND "Contract Valid Until" LIKE '%2021'
