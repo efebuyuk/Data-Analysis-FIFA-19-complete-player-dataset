@@ -1,2 +1,5 @@
 # ignore Excel results
 *.xlsx
+
+# ignore .idea folder
+.idea/
